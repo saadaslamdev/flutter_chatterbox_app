@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "314499425729",
+    "project_id": "globalchatapp-dcc19",
+    "storage_bucket": "globalchatapp-dcc19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314499425729:android:8c482da546538115cafb40",
+        "android_client_info": {
+          "package_name": "com.example.globatchat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK_uISChqfl7f5Nb0DLlRTmFIJMvcfEig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
