@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:globatchat_app/screens/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,15 +11,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    var _formKey = GlobalKey<FormState>();
+    var formKey = GlobalKey<FormState>();
     return Scaffold(
         appBar: AppBar(
-          title: Text('Login'),
+          title: const Text('Login'),
           centerTitle: true,
         ),
         body: Center(
             child: Form(
-          key: _formKey,
+          key: formKey,
           child: Padding(
             padding: const EdgeInsets.all(30),
             child: Column(
@@ -50,18 +49,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: const InputDecoration(
                       labelText: 'Password', border: OutlineInputBorder()),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFbc2a50),
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(const Size(200, 50)),
                   ),
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (formKey.currentState!.validate()) {}
                   },
-                  child: const Text('Login'),
+                  child: const Text('LOGIN', style: TextStyle(fontSize: 20)),
                 ),
                 const SizedBox(height: 40),
-                const Text('Dont have an account?',
+                const Text("Don't have an account?",
                     style: TextStyle(fontSize: 13)),
                 const SizedBox(height: 5),
                 ElevatedButton(

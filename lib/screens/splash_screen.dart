@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:globatchat_app/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,9 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         body: Center(
-      child: Text('Splash Screen'),
+      child: SvgPicture.asset('assets/images/logo_dark.svg'),
     ));
   }
 }

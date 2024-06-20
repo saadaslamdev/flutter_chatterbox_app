@@ -27,6 +27,15 @@ class _GlobalChatAppState extends State<GlobalChatApp> {
       theme: ThemeData(
           fontFamily: 'Poppins',
           brightness: Brightness.dark,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFbc2a50),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(11),
+              ),
+            ),
+          ),
           useMaterial3: true),
       home: const SplashScreen(),
     );
