@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:globatchat_app/views/dashboard_screen.dart';
 import 'package:globatchat_app/views/login_screen.dart';
 
@@ -42,7 +41,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: SvgPicture.asset('assets/images/logo_dark.svg'),
+      child: SizedBox(
+          width: 300,
+          height: 300,
+          child: Image.asset('assets/images/SplashLogo.png')),
     ));
   }
 }
