@@ -22,7 +22,7 @@ class AuthViewModel extends ChangeNotifier {
       _errorMessage = null;
       firebase_auth.User? firebaseUser =
           await _authService.signInWithEmailPassword(email, password);
-      await _fetchUserData(firebaseUser!);
+      await fetchUserData(firebaseUser!);
       notifyListeners();
       return (null, firebaseUser);
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -33,10 +33,11 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<(String? error, User? user)> signUp(
-      String email, String password) async {
+      String email, String password, String username) async {
     try {
       _errorMessage = null;
-      await _authService.signUpWithEmailPassword(email, password);
+      await _authService.signUpWithEmailPassword(email, password, username);
+      //await _authService.signOut();
       notifyListeners();
       return (null, null);
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -55,7 +56,7 @@ class AuthViewModel extends ChangeNotifier {
   void listenToAuthState() {
     _authService.authStateChanges.listen((firebaseUser) {
       if (firebaseUser != null) {
-        _fetchUserData(firebaseUser);
+        fetchUserData(firebaseUser);
       } else {
         _userModel = null;
         notifyListeners();
@@ -63,8 +64,8 @@ class AuthViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> _fetchUserData(User user) async {
-    var userName = user.displayName ?? '';
+  Future<void> fetchUserData(User user) async {
+    var userName = await _authService.getUserName(user);
     var userEmail = user.email ?? '';
     var userId = user.uid;
 

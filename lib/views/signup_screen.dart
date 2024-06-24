@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:globatchat_app/utils/snack_bar_message.dart';
+import 'package:globatchat_app/components/snack_bar_component.dart';
 import 'package:globatchat_app/view_models/auth_viewmodel.dart';
 import 'package:globatchat_app/views/login_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../components/future_fullscreen_loader.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -58,6 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 200,
                     child: Image.asset('assets/images/logo.png')),
                 TextFormField(
+                  controller: usernameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -102,22 +104,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      var (error, _) = await Provider.of<AuthViewModel>(context,
-                              listen: false)
-                          .signUp(
-                              emailController.text, passwordController.text);
-                      if (error != null) {
-                        SnackBarMessage.showSnackBar(
-                            context, error, Colors.red);
-                        return;
-                      } else {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()));
-                        SnackBarMessage.showSnackBar(context,
-                            'Account created successfully', Colors.green);
-                      }
+                      FutureFullscreenLoader.show<void>(
+                        context: context,
+                        future: () async {
+                          var (error, _) = await Provider.of<AuthViewModel>(
+                                  context,
+                                  listen: false)
+                              .signUp(
+                                  emailController.text,
+                                  passwordController.text,
+                                  usernameController.text);
+                          if (error != null) {
+                            throw error;
+                          }
+                        },
+                        onComplete: (context) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()),
+                            );
+                            SnackBarComponent.showSnackBar(
+                              context,
+                              'Account created successfully',
+                              Colors.green,
+                            );
+                          });
+                        },
+                        onError: (context, error) {
+                          SnackBarComponent.showSnackBar(
+                              context, error.toString(), Colors.red);
+                        },
+                      );
                     }
                   },
                   child: const Text('SIGN UP', style: TextStyle(fontSize: 20)),

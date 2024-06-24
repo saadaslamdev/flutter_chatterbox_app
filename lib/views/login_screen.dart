@@ -4,7 +4,8 @@ import 'package:globatchat_app/views/dashboard_screen.dart';
 import 'package:globatchat_app/views/signup_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/snack_bar_message.dart';
+import '../components/future_fullscreen_loader.dart';
+import '../components/snack_bar_component.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -64,19 +65,31 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  var (
-                    error,
-                    _
-                  ) = await Provider.of<AuthViewModel>(context, listen: false)
-                      .signIn(_emailController.text, _passwordController.text);
-                  if (error != null) {
-                    SnackBarMessage.showSnackBar(context, error, Colors.red);
-                  } else {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const DashboardScreen()));
-                  }
+                  FutureFullscreenLoader.show<void>(
+                    context: context,
+                    future: () async {
+                      var (error, _) = await Provider.of<AuthViewModel>(context,
+                              listen: false)
+                          .signIn(
+                              _emailController.text, _passwordController.text);
+                      if (error != null) {
+                        throw error;
+                      }
+                    },
+                    onComplete: (context) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DashboardScreen()),
+                        );
+                      });
+                    },
+                    onError: (context, error) {
+                      SnackBarComponent.showSnackBar(
+                          context, error.toString(), Colors.red);
+                    },
+                  );
                 }
               },
               child: const Text('LOGIN', style: TextStyle(fontSize: 20)),

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:globatchat_app/view_models/auth_viewmodel.dart';
 import 'package:globatchat_app/views/dashboard_screen.dart';
 import 'package:globatchat_app/views/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,10 +17,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 2), () {
-      if (user == null) {
-        openLogin();
+      if (user != null) {
+        openDashboardAsync();
       } else {
-        openDashboard();
+        openLogin();
       }
     });
 
@@ -31,7 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
     }));
   }
 
-  void openDashboard() {
+  Future<void> openDashboardAsync() async {
+    await Provider.of<AuthViewModel>(context, listen: false)
+        .fetchUserData(user!);
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return const DashboardScreen();
     }));

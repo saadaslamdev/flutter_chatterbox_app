@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-class SnackBarMessage {
+class SnackBarComponent {
   static void showSnackBar(
       BuildContext context, String message, Color backgroundColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(
-            message,
-          ),
-          backgroundColor: backgroundColor),
+        content: Text(
+          message,
+        ),
+        backgroundColor: backgroundColor,
+        showCloseIcon: true,
+      ),
     );
   }
 }
