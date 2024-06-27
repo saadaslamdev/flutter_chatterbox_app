@@ -31,6 +31,7 @@ class _GlobalChatAppState extends State<GlobalChatApp> {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'ChatterBox',
         theme: ThemeData(
             fontFamily: 'Poppins',

@@ -32,12 +32,13 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<(String? error, User? user)> signUp(
-      String email, String password, String username) async {
+  Future<(String? error, User? user)> signUp(String email, String password,
+      String username, String phoneNumber) async {
     try {
       _errorMessage = null;
-      await _authService.signUpWithEmailPassword(email, password, username);
-      //await _authService.signOut();
+      await _authService.signUpWithEmailPassword(
+          email, password, username, phoneNumber);
+      await _authService.signOut();
       notifyListeners();
       return (null, null);
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -65,17 +66,27 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchUserData(User user) async {
-    var userName = await _authService.getUserName(user);
-    var userEmail = user.email ?? '';
-    var userId = user.uid;
+    var data = await _authService.fetchUserData(user);
+    if (data != null) {
+      _userModel = UserModel.fromMap(data, user);
+    } else {
+      _userModel = null;
+    }
+    notifyListeners();
+  }
 
-    Map<String, dynamic> userData = {
-      'id': userId,
-      'name': userName,
-      'email': userEmail,
-    };
+  Future<String?> setUserModel(Map<String, dynamic> userModel) async {
+    try {
+      final currentData = _userModel!.toMap();
+      final updatedData = {...currentData, ...userModel};
+      await _authService.updateUserData(_userModel!.user!, updatedData);
+      _userModel = UserModel.fromMap(updatedData);
+      notifyListeners();
 
-    _userModel = UserModel.fromMap(userData);
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   String _handleAuthException(firebase_auth.FirebaseAuthException e) {

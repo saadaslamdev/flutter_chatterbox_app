@@ -13,8 +13,26 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    var authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    if (authViewModel.userModel == null) {
+      print('fetching user data');
+      await authViewModel.fetchUserData(authViewModel.userModel!.user!);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('ChatterBox'),
+        centerTitle: true,
+      ),
       body: Center(
         child: Consumer<AuthViewModel>(
           builder: (context, auth, _) {
@@ -27,6 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Text(auth.userModel!.name),
                   Text(auth.userModel!.email),
                   Text(auth.userModel!.id),
+                  Text(auth.userModel!.phoneNumber),
                   ElevatedButton(
                     style: ButtonStyle(
                       fixedSize: MaterialStateProperty.all(const Size(200, 50)),

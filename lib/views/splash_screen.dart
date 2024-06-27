@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:globatchat_app/view_models/auth_viewmodel.dart';
 import 'package:globatchat_app/views/dashboard_screen.dart';
+import 'package:globatchat_app/views/lets_get_started_screen.dart';
 import 'package:globatchat_app/views/login_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -34,11 +35,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> openDashboardAsync() async {
-    await Provider.of<AuthViewModel>(context, listen: false)
-        .fetchUserData(user!);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return const DashboardScreen();
-    }));
+    var userModel = Provider.of<AuthViewModel>(context, listen: false);
+    await userModel.fetchUserData(user!);
+
+    if (userModel.userModel!.isSurveyCompleted) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const DashboardScreen();
+      }));
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const LetsGetStartedScreen();
+      }));
+    }
   }
 
   @override
