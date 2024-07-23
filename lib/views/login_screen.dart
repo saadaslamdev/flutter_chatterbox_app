@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
             width: 200,
             height: 200,
-            child: Image.asset('assets/images/logo.png')),
+            child: Image.asset('assets/images/SplashLogo.png')),
         Form(
           key: formKey,
           child: Padding(

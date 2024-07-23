@@ -1,5 +1,8 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:globatchat_app/view_models/chat_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -11,7 +14,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const GlobalChatApp());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const GlobalChatApp(),
+    ),
+  );
 }
 
 class GlobalChatApp extends StatefulWidget {
@@ -29,7 +37,11 @@ class _GlobalChatAppState extends State<GlobalChatApp> {
         ChangeNotifierProvider<AuthViewModel>(
           create: (_) => AuthViewModel(),
         ),
+        ChangeNotifierProvider<ChatViewModel>(
+          create: (_) => ChatViewModel(),
+        ),
       ],
+      builder: DevicePreview.appBuilder,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'ChatterBox',

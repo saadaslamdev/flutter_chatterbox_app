@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -86,6 +89,29 @@ class AuthViewModel extends ChangeNotifier {
       return null;
     } catch (e) {
       return e.toString();
+    }
+  }
+
+  Future<String?> uploadImageToFirestore(Uint8List imageBytes) async {
+    try {
+      await _authService.uploadImageToFirestore(_userModel!.id, imageBytes);
+      return null;
+    } catch (e) {
+      print(e);
+      throw e.toString();
+    }
+  }
+
+  Future<String?> getProfilePicture() async {
+    try {
+      var downloadLink = await _authService.getDownloadURL(_userModel!.id);
+      Map<String, dynamic> data = {'profilePicture': downloadLink};
+      await setUserModel(data);
+      notifyListeners();
+      return null;
+    } catch (e) {
+      print(e);
+      throw e.toString();
     }
   }
 

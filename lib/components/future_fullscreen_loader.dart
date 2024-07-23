@@ -64,6 +64,7 @@ class _FutureFullscreenLoaderDialogState<T>
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(
+                      color: Colors.white,
                       backgroundColor: Colors.transparent,
                     ),
                   );

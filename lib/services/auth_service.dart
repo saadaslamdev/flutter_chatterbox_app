@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   Future<User?> signInWithEmailPassword(String email, String password) async {
     UserCredential userCredential = await _firebaseAuth
@@ -32,7 +36,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>?> fetchUserData(User user) async {
-    final doc = await firebaseFirestore.collection('users').doc(user.uid).get();
+    final doc = await _firebaseFirestore.collection('users').doc(user.uid).get();
     if (doc.exists) {
       return doc.data()!;
     }
@@ -40,10 +44,27 @@ class AuthService {
   }
 
   Future<void> updateUserData(User user, Map<String, dynamic> data) async {
-    await firebaseFirestore
+    await _firebaseFirestore
         .collection('users')
         .doc(user.uid)
         .set(data, SetOptions(merge: true));
+  }
+
+  Future<void> uploadImageToFirestore(
+      String userId, Uint8List imageBytes) async {
+    final storageRef =
+        firebaseStorage.ref().child('users/$userId/profilePicture.jpg');
+
+    await storageRef.putData(imageBytes);
+  }
+
+  Future<String> getDownloadURL(String userId) async {
+    final storageRef =
+        firebaseStorage.ref().child('users/$userId/profilePicture.jpg');
+
+    String downloadURL = await storageRef.getDownloadURL();
+    print('downloadURL $downloadURL');
+    return downloadURL;
   }
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();

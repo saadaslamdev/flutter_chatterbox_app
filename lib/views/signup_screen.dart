@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:globatchat_app/components/snack_bar_component.dart';
 import 'package:globatchat_app/view_models/auth_viewmodel.dart';
@@ -35,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                   width: 200,
                   height: 200,
-                  child: Image.asset('assets/images/logo.png')),
+                  child: Image.asset('assets/images/SplashLogo.png')),
               Form(
                 key: formKey,
                 child: Padding(
